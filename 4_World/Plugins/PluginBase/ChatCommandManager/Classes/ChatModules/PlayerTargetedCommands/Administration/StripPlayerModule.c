@@ -18,17 +18,15 @@ class StripPlayerChatModule : ChatCommand
         foreach(Man target : targets)
         {
             PlayerBase playerTarget = PlayerBase.Cast(target);
+            if(!playerTarget) continue;
             PlayerIdentity targetIdentity = playerTarget.GetIdentity();
+            if(!targetIdentity) continue;
+            string targetName = targetIdentity.GetName();
+            string targetID = targetIdentity.GetPlainId();
 
-            if(playerTarget != null && targetIdentity != null)
-            {
-                string targetName = targetIdentity.GetName();
-                string targetID = targetIdentity.GetPlainId();
-
-                playerTarget.RemoveAllItems();
-                GetSimpleLogger().Log(string.Format("\"%1\" (steamid=%2) /strip used on: \"%3\" (steamid=%4)", callerName, callerID, targetName, targetID));
-                GetWebHooksManager().PostData(AdminActivityMessage, new AdminActivityMessage(callerID, callerName, "Chat Command Manager: /strip command used on: " + targetName + " ID: " + targetID));
-            }
+            playerTarget.RemoveAllItems();
+            GetSimpleLogger().Log(string.Format("\"%1\" (steamid=%2) /strip used on: \"%3\" (steamid=%4)", callerName, callerID, targetName, targetID));
+            GetWebHooksManager().PostData(AdminActivityMessage, new AdminActivityMessage(callerID, callerName, "Chat Command Manager: /strip command used on: " + targetName + " ID: " + targetID));
         }
     }
 }
